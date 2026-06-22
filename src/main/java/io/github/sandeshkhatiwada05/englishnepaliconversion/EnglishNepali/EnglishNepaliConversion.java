@@ -1,4 +1,4 @@
-package io.github.sandeshkhatiwada05.englishnepaliconversion;
+package io.github.sandeshkhatiwada05.englishnepaliconversion.EnglishNepali;
 
 import java.math.BigDecimal;
 
@@ -18,7 +18,7 @@ import java.math.BigDecimal;
  *
  * @author Sandesh Khatiwada
  */
-public class EnglishNepaliConversionImplementation implements EnglishNepaliConversion {
+public class EnglishNepaliConversion {
 
     // ===================== DIGIT MAP =====================
 
@@ -46,7 +46,6 @@ public class EnglishNepaliConversionImplementation implements EnglishNepaliConve
     /**
      * Converts English digits into Nepali digits.
      */
-    @Override
     public String EnglishNumberToNepali(Number userInputNumber) {
 
         String number = convertToString(userInputNumber);
@@ -68,7 +67,6 @@ public class EnglishNepaliConversionImplementation implements EnglishNepaliConve
     /**
      * Converts number into Nepali word sentence.
      */
-    @Override
     public String EnglishNumberToNepaliSentence(Number number) {
 
         if (number == null) return "";
@@ -88,11 +86,10 @@ public class EnglishNepaliConversionImplementation implements EnglishNepaliConve
 
     /**
      * Formats number using Nepali/Indian comma system and converts digits to Nepali.
-     *
+     * <p>
      * Example:
      * 12345678 → १,२३,४५,६७८
      */
-    @Override
     public String addNepaliCommas(Number numNepali) {
 
         String num = convertToString(numNepali);
