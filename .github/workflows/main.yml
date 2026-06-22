@@ -20,20 +20,13 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Import GPG key
-        run: |
-          echo "${{ secrets.GPG_PRIVATE_KEY }}" | base64 --decode > private.key
-          gpg --batch --import private.key
-          gpg --list-secret-keys --keyid-format LONG
+      - name: Cache Maven
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
 
-      - name: Configure GPG
-        run: |
-          mkdir -p ~/.gnupg
-          echo "use-agent" >> ~/.gnupg/gpg.conf
-          echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
-
-      - name: Publish package
-        run: mvn clean deploy -P central --batch-mode
+      - name: Publish to GitHub Packages
+        run: mvn clean deploy -P github --batch-mode -Dgpg.skip=true
         env:
           GITHUB_TOKEN: ${{ secrets.JAVA_TOKEN }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
