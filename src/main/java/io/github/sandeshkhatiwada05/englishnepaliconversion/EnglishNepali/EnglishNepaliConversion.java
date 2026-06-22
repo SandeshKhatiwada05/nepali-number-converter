@@ -3,31 +3,34 @@ package io.github.sandeshkhatiwada05.englishnepaliconversion.EnglishNepali;
 import java.math.BigDecimal;
 
 /**
- * English to Nepali number conversion utility.
+ * Utility class for converting English numbers into Nepali formats.
  *
- * <p>
- * Supports:
- * <ul>
- *     <li>English digits → Nepali digits (०-९)</li>
- *     <li>Number → Nepali word representation</li>
- *     <li>Nepali comma formatting</li>
- * </ul>
+ * This class provides three main features:
+ * 
+ *     Conversion of English digits (0-9) into Nepali digits (०-९)
+ *     Conversion of numbers into Nepali word representation
+ *     Formatting numbers using the Nepali/Indian comma system
+ * 
  *
- * <p>
- * Number system used: Nepali (hundred, thousand, lakh, crore, arab, kharab)
+ * The numbering system follows the South Asian unit system:
+ * thousand, lakh, crore, arab, kharab.
+ *
+ * This class is stateless and safe to use across threads.
  *
  * @author Sandesh Khatiwada
  */
 public class EnglishNepaliConversion {
 
-    // ===================== DIGIT MAP =====================
-
+    /**
+     * Mapping table for English digits (0-9) to Nepali digits.
+     */
     private static final char[] NEPALI_DIGITS = {
             '०', '१', '२', '३', '४', '५', '६', '७', '८', '९'
     };
 
-    // ===================== WORD TABLE (0–99) =====================
-
+    /**
+     * Nepali word mapping for numbers from 0 to 99.
+     */
     private static final String[] UNIT = {
             "", "एक", "दुई", "तीन", "चार", "पाँच", "छ", "सात", "आठ", "नौ", "दश",
             "एघार", "बाह्र", "तेह्र", "चौध", "पन्ध्र", "सोह्र", "सत्र", "अठार", "उन्नाइस", "बीस",
@@ -41,15 +44,15 @@ public class EnglishNepaliConversion {
             "एकानब्बे", "बयानब्बे", "त्रियानब्बे", "चौरानब्बे", "पञ्चानब्बे", "छयानब्बे", "सन्तानब्बे", "अन्ठानब्बे", "उनान्सय"
     };
 
-    // ===================== API 1: DIGITS =====================
-
     /**
-     * Converts English digits into Nepali digits.
+     * Converts an English number into Nepali digits.
+     *
+     * @param userInputNumber input number in English format
+     * @return string containing Nepali digits
      */
     public String EnglishNumberToNepali(Number userInputNumber) {
 
         String number = convertToString(userInputNumber);
-
         char[] arr = number.toCharArray();
 
         for (int i = 0; i < arr.length; i++) {
@@ -62,10 +65,11 @@ public class EnglishNepaliConversion {
         return new String(arr);
     }
 
-    // ===================== API 2: SENTENCE =====================
-
     /**
-     * Converts number into Nepali word sentence.
+     * Converts a number into its Nepali word representation.
+     *
+     * @param number input number
+     * @return number written in Nepali words
      */
     public String EnglishNumberToNepaliSentence(Number number) {
 
@@ -82,13 +86,15 @@ public class EnglishNepaliConversion {
         return convert(n);
     }
 
-    // ===================== API 3: COMMA FORMAT =====================
-
     /**
-     * Formats number using Nepali/Indian comma system and converts digits to Nepali.
-     * <p>
+     * Formats a number using Nepali/Indian comma system and converts digits to Nepali.
+     *
      * Example:
-     * 12345678 → १,२३,४५,६७८
+     * Input: 12345678
+     * Output: १,२३,४५,६७८
+     *
+     * @param numNepali input number
+     * @return formatted string with Nepali digits and commas
      */
     public String addNepaliCommas(Number numNepali) {
 
@@ -101,7 +107,6 @@ public class EnglishNepaliConversion {
 
         int i = len;
 
-        // last 3 digits
         sb.append(num, i - 3, i);
         i -= 3;
 
@@ -117,37 +122,24 @@ public class EnglishNepaliConversion {
         return toNepaliDigits(sb.toString());
     }
 
-    // ===================== CORE RECURSION =====================
-
+    /**
+     * Internal recursive converter for number-to-word conversion.
+     */
     private String convert(long n) {
 
-        if (n < 100) {
-            return UNIT[(int) n];
-        }
-
-        if (n < 1_000) {
-            return twoPart(n, 100, " सय");
-        }
-
-        if (n < 100_000) {
-            return twoPart(n, 1_000, " हजार");
-        }
-
-        if (n < 10_000_000) {
-            return twoPart(n, 100_000, " लाख");
-        }
-
-        if (n < 1_000_000_000) {
-            return twoPart(n, 10_000_000, " करोड");
-        }
-
-        if (n < 100_000_000_000L) {
-            return twoPart(n, 1_000_000_000L, " अर्ब");
-        }
+        if (n < 100) return UNIT[(int) n];
+        if (n < 1_000) return twoPart(n, 100, " सय");
+        if (n < 100_000) return twoPart(n, 1_000, " हजार");
+        if (n < 10_000_000) return twoPart(n, 100_000, " लाख");
+        if (n < 1_000_000_000) return twoPart(n, 10_000_000, " करोड");
+        if (n < 100_000_000_000L) return twoPart(n, 1_000_000_000L, " अर्ब");
 
         return twoPart(n, 100_000_000_000L, " खर्ब");
     }
 
+    /**
+     * Helper for splitting number into quotient and remainder.
+     */
     private String twoPart(long n, long scale, String label) {
 
         long q = n / scale;
@@ -163,8 +155,9 @@ public class EnglishNepaliConversion {
         return sb.toString();
     }
 
-    // ===================== UTIL =====================
-
+    /**
+     * Converts input number to plain string representation.
+     */
     private String convertToString(Number input) {
 
         if (input == null) return "0";
@@ -176,6 +169,9 @@ public class EnglishNepaliConversion {
         return bd.stripTrailingZeros().toPlainString();
     }
 
+    /**
+     * Converts ASCII digits in a string into Nepali digits.
+     */
     private String toNepaliDigits(String input) {
 
         char[] arr = input.toCharArray();

@@ -3,16 +3,13 @@ package io.github.sandeshkhatiwada05.englishnepaliconversion.EnglishNepali;
 /**
  * Implementation for converting Nepali numerals to English numerals.
  *
- * <p>
  * Supports conversion of Unicode Nepali digits (०-९) into standard English digits (0-9).
- * This is a lightweight, O(n) character-mapping utility designed for high-performance use.
- * </p>
- * <p>
+ * This is a lightweight O(n) character mapping utility designed for high-performance use.
+ *
+ *
  * Example:
- * <pre>
  * Input  : १२३४५
  * Output : 12345
- * </pre>
  *
  * @author Sandesh Khatiwada
  */
@@ -23,7 +20,7 @@ public class NepaliEnglishConversion {
      * Kept for symmetry or future bidirectional conversion support.
      */
     private static final char[] ENGLISH_DIGITS = {
-            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+            '0','1','2','3','4','5','6','7','8','9'
     };
 
     /**
@@ -48,10 +45,7 @@ public class NepaliEnglishConversion {
     /**
      * Converts a string containing Nepali digits into English digits.
      *
-     * <p>
-     * Any non-Nepali-digit characters (like commas, dots, spaces)
-     * are preserved as-is.
-     * </p>
+     * Non-Nepali characters (commas, dots, spaces, etc.) are preserved as-is.
      *
      * @param nepaliInputNumber input string containing Nepali numerals
      * @return converted string in English numerals
@@ -67,7 +61,6 @@ public class NepaliEnglishConversion {
         for (int i = 0; i < arr.length; i++) {
             char c = arr[i];
 
-            // fast lookup conversion (O(1))
             if (c < NEPALI_TO_ENGLISH_DIGITS.length &&
                     NEPALI_TO_ENGLISH_DIGITS[c] != 0) {
 

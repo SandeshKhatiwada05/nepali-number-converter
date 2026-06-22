@@ -2,45 +2,67 @@ package io.github.sandeshkhatiwada05.englishnepaliconversion.AdAndBs.Service;
 
 import io.github.sandeshkhatiwada05.englishnepaliconversion.AdAndBs.config.CalendarDataLoader;
 import io.github.sandeshkhatiwada05.englishnepaliconversion.AdAndBs.model.NepaliDate;
-import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
 
 /**
- * Core utility for converting between AD (Gregorian calendar)
+ * Utility class for converting between AD (Gregorian calendar)
  * and BS (Bikram Sambat calendar).
  *
- * <p>
- * Uses a preloaded calendar dataset and a fixed reference mapping:
- * BS 2026, day 264 <-> AD 1970-01-01.
- * </p>
+ * 
+ * This converter uses a preloaded BS calendar dataset and a fixed reference mapping:
+ * BS 2026 day 264 corresponds to AD 1970-01-01.
+ * 
  *
- * <p>
- * All methods are static and thread-safe.
- * </p>
+ * 
+ * All methods are static and stateless, making them thread-safe.
+ * 
  *
- * @author Sandesh Khatiwada
+ * 
+ * Note: This class depends on complete BS calendar data being available
+ * for all supported years in {@link CalendarDataLoader}.
+ * 
  */
-
 public final class AdAndBsConverter {
 
+    /**
+     * Preloaded BS calendar data.
+     * Key: BS year
+     * Value: int array of month lengths (12 months + total days at index 12)
+     */
     private static final Map<Integer, int[]> CALENDAR =
             CalendarDataLoader.getCalendarData();
 
+    /**
+     * Reference AD date used as anchor point for conversion.
+     */
     private static final LocalDate AD_REFERENCE =
             LocalDate.of(1970, 1, 1);
 
+    /**
+     * Reference BS year used in conversion mapping.
+     */
     private static final int BS_REFERENCE_YEAR = 2026;
+
+    /**
+     * Reference day within BS year that maps to AD_REFERENCE.
+     */
     private static final int BS_REFERENCE_DAY = 264;
 
     private AdAndBsConverter() {
-        // prevent instantiation
+        // utility class
     }
 
     /**
-     * Converts BS date to AD date.
+     * Converts a BS date (year, month, day) to AD date.
+     *
+     * @param year BS year
+     * @param month BS month (1-12)
+     * @param day BS day (1-based day of month)
+     * @return corresponding AD {@link LocalDate}
+     * @throws IllegalArgumentException if date is invalid or unsupported
      */
     public static LocalDate bsToAd(int year, int month, int day) {
 
@@ -48,13 +70,14 @@ public final class AdAndBsConverter {
 
         long diff = calculateDayDifferenceFromReference(year, month, day);
 
-        LocalDate result = AD_REFERENCE.plusDays(diff);
-
-        return result;
+        return AD_REFERENCE.plusDays(diff);
     }
 
     /**
-     * Converts BS date object to AD date.
+     * Converts a BS date object to AD date.
+     *
+     * @param date BS date object
+     * @return corresponding AD {@link LocalDate}
      */
     public static LocalDate bsToAd(NepaliDate date) {
         return bsToAd(date.year(), date.month(), date.day());
@@ -62,18 +85,22 @@ public final class AdAndBsConverter {
 
     /**
      * Converts AD date to BS date.
+     *
+     * @param adDate Gregorian calendar date
+     * @return corresponding BS {@link NepaliDate}
      */
     public static NepaliDate adToBs(LocalDate adDate) {
 
-
         long diff = ChronoUnit.DAYS.between(AD_REFERENCE, adDate);
 
-        return
-                (diff >= 0)
-                        ? convertForward(diff)
-                        : convertBackward(-diff);
+        return (diff >= 0)
+                ? convertForward(diff)
+                : convertBackward(-diff);
     }
 
+    /**
+     * Converts forward from reference BS year.
+     */
     private static NepaliDate convertForward(long diff) {
 
         int year = BS_REFERENCE_YEAR;
@@ -87,6 +114,9 @@ public final class AdAndBsConverter {
         return findBsDate(year, (int) total);
     }
 
+    /**
+     * Converts backward from reference BS year.
+     */
     private static NepaliDate convertBackward(long diff) {
 
         int year = BS_REFERENCE_YEAR;
@@ -100,6 +130,9 @@ public final class AdAndBsConverter {
         return findBsDate(year, (int) remaining);
     }
 
+    /**
+     * Finds BS month/day from total day count.
+     */
     private static NepaliDate findBsDate(int year, int days) {
 
         int[] months = CALENDAR.get(year);
@@ -116,9 +149,10 @@ public final class AdAndBsConverter {
         return new NepaliDate(year, month, days);
     }
 
-    private static long calculateDayDifferenceFromReference(
-            int year, int month, int day
-    ) {
+    /**
+     * Calculates day difference between input BS date and reference date.
+     */
+    private static long calculateDayDifferenceFromReference(int year, int month, int day) {
 
         int passedDays = passedDaysInYear(year, month, day);
         long dayDiff = 0;
@@ -146,6 +180,9 @@ public final class AdAndBsConverter {
         return dayDiff;
     }
 
+    /**
+     * Calculates passed days in a BS year up to given month/day.
+     */
     private static int passedDaysInYear(int year, int month, int day) {
 
         int total = 0;
@@ -158,6 +195,11 @@ public final class AdAndBsConverter {
         return total + day;
     }
 
+    /**
+     * Validates BS date before conversion.
+     *
+     * @throws IllegalArgumentException if year/month/day is invalid
+     */
     private static void validateBsDate(int year, int month, int day) {
 
         if (!CALENDAR.containsKey(year)) {
@@ -165,11 +207,11 @@ public final class AdAndBsConverter {
         }
 
         if (month < 1 || month > 12) {
-            throw new IllegalArgumentException("Invalid month");
+            throw new IllegalArgumentException("Invalid month: " + month);
         }
 
         if (day < 1 || day > CALENDAR.get(year)[month - 1]) {
-            throw new IllegalArgumentException("Invalid day");
+            throw new IllegalArgumentException("Invalid day: " + day);
         }
     }
 }
