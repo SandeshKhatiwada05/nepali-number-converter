@@ -4,6 +4,10 @@
 
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- ===================== -->
+    <!-- BASIC PROJECT INFO -->
+    <!-- ===================== -->
+
     <groupId>io.github.sandeshkhatiwada05</groupId>
     <artifactId>nepali-number-converter</artifactId>
     <version>1.0.2</version>
@@ -13,13 +17,20 @@
     <description>Java library for converting English numbers into Nepali words</description>
     <url>https://github.com/SandeshKhatiwada05/nepali-number-converter</url>
 
+    <!-- ===================== -->
+    <!-- PROPERTIES -->
+    <!-- ===================== -->
+
     <properties>
         <java.version>17</java.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <lombok.version>1.18.42</lombok.version>
-        <gpg.skip>false</gpg.skip>
     </properties>
+
+    <!-- ===================== -->
+    <!-- DEPENDENCIES -->
+    <!-- ===================== -->
 
     <dependencies>
 
@@ -38,11 +49,15 @@
 
     </dependencies>
 
+    <!-- ===================== -->
+    <!-- BUILD (COMMON PLUGINS ONLY) -->
+    <!-- ===================== -->
+
     <build>
 
         <plugins>
 
-            <!-- Compiler -->
+            <!-- compiler -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -60,7 +75,7 @@
                 </configuration>
             </plugin>
 
-            <!-- Source JAR -->
+            <!-- sources -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -75,7 +90,7 @@
                 </executions>
             </plugin>
 
-            <!-- Javadoc JAR -->
+            <!-- javadoc -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -90,39 +105,80 @@
                 </executions>
             </plugin>
 
-            <!-- GPG signing (FIXED) -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>3.1.0</version>
-
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-
-                <configuration>
-                    <skip>${gpg.skip}</skip>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.sonatype.central</groupId>
-                <artifactId>central-publishing-maven-plugin</artifactId>
-                <version>0.9.0</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <publishingServerId>central</publishingServerId>
-                </configuration>
-            </plugin>
-
         </plugins>
     </build>
+
+    <!-- ===================== -->
+    <!-- CENTRAL PROFILE (ONLY HERE) -->
+    <!-- ===================== -->
+
+    <profiles>
+
+        <profile>
+            <id>central</id>
+
+            <distributionManagement>
+                <repository>
+                    <id>central</id>
+                    <url>https://central.sonatype.com/api/publisher/deployments</url>
+                </repository>
+            </distributionManagement>
+
+            <build>
+                <plugins>
+
+                    <!-- GPG ONLY for central -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- central publisher ONLY -->
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.9.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                        </configuration>
+                    </plugin>
+
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- ===================== -->
+        <!-- GITHUB PROFILE -->
+        <!-- ===================== -->
+
+        <profile>
+            <id>github</id>
+
+            <distributionManagement>
+                <repository>
+                    <id>github</id>
+                    <url>https://maven.pkg.github.com/SandeshKhatiwada05/nepali-number-converter</url>
+                </repository>
+            </distributionManagement>
+
+        </profile>
+
+    </profiles>
+
+    <!-- ===================== -->
+    <!-- LICENSE -->
+    <!-- ===================== -->
 
     <licenses>
         <license>
@@ -131,35 +187,19 @@
         </license>
     </licenses>
 
+    <!-- ===================== -->
+    <!-- SCM -->
+    <!-- ===================== -->
+
     <scm>
         <url>https://github.com/SandeshKhatiwada05/nepali-number-converter</url>
         <connection>scm:git:git://github.com/SandeshKhatiwada05/nepali-number-converter.git</connection>
         <developerConnection>scm:git:ssh://github.com/SandeshKhatiwada05/nepali-number-converter.git</developerConnection>
     </scm>
 
-    <profiles>
-
-        <profile>
-            <id>central</id>
-            <distributionManagement>
-                <repository>
-                    <id>central</id>
-                    <url>https://central.sonatype.com/api/publisher/deployments</url>
-                </repository>
-            </distributionManagement>
-        </profile>
-
-        <profile>
-            <id>github</id>
-            <distributionManagement>
-                <repository>
-                    <id>github</id>
-                    <url>https://maven.pkg.github.com/SandeshKhatiwada05/nepali-number-converter</url>
-                </repository>
-            </distributionManagement>
-        </profile>
-
-    </profiles>
+    <!-- ===================== -->
+    <!-- DEVELOPERS -->
+    <!-- ===================== -->
 
     <developers>
         <developer>
