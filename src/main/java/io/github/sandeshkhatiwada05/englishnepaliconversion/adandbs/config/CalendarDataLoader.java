@@ -1,4 +1,4 @@
-package io.github.sandeshkhatiwada05.englishnepaliconversion.AdAndBs.config;
+package io.github.sandeshkhatiwada05.englishnepaliconversion.adandbs.config;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

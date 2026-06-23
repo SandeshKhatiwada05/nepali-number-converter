@@ -1,4 +1,4 @@
-package io.github.sandeshkhatiwada05.englishnepaliconversion.EnglishNepali;
+package io.github.sandeshkhatiwada05.englishnepaliconversion.englishnepali;
 
 import java.math.BigDecimal;
 
@@ -19,7 +19,7 @@ import java.math.BigDecimal;
  *
  * @author Sandesh Khatiwada
  */
-public class EnglishNepaliConversion {
+public class ConvertEnglishNepali {
 
     /**
      * Mapping table for English digits (0-9) to Nepali digits.
@@ -50,7 +50,7 @@ public class EnglishNepaliConversion {
      * @param userInputNumber input number in English format
      * @return string containing Nepali digits
      */
-    public String EnglishNumberToNepali(Number userInputNumber) {
+    public static String englishNumberToNepali(Number userInputNumber) {
 
         String number = convertToString(userInputNumber);
         char[] arr = number.toCharArray();
@@ -68,16 +68,16 @@ public class EnglishNepaliConversion {
     /**
      * Converts a number into its Nepali word representation.
      *
-     * @param number input number
+     * @param englishNumber input number
      * @return number written in Nepali words
      */
-    public String EnglishNumberToNepaliSentence(Number number) {
+    public static String englishNumberToNepaliSentence(Number englishNumber) {
 
-        if (number == null) return "";
+        if (englishNumber == null) return "";
 
-        BigDecimal bd = (number instanceof BigDecimal)
-                ? (BigDecimal) number
-                : new BigDecimal(number.toString());
+        BigDecimal bd = (englishNumber instanceof BigDecimal)
+                ? (BigDecimal) englishNumber
+                : new BigDecimal(englishNumber.toString());
 
         long n = bd.longValue();
 
@@ -93,30 +93,33 @@ public class EnglishNepaliConversion {
      * Input: 12345678
      * Output: १,२३,४५,६७८
      *
-     * @param numNepali input number
+     * @param englishNumber input number
      * @return formatted string with Nepali digits and commas
      */
-    public String addNepaliCommas(Number numNepali) {
+    public static String addNepaliCommas(Number englishNumber) {
 
-        String num = convertToString(numNepali);
+        String num = convertToString(englishNumber);
 
-        int len = num.length();
-        if (len <= 3) return toNepaliDigits(num);
+        if (num.length() <= 3) {
+            return toNepaliDigits(num);
+        }
 
         StringBuilder sb = new StringBuilder();
 
-        int i = len;
+        int len = num.length();
 
-        sb.append(num, i - 3, i);
-        i -= 3;
+        // last 3 digits
+        sb.insert(0, num.substring(len - 3));
+        len -= 3;
 
-        while (i > 0) {
+        // remaining digits in pairs
+        while (len > 0) {
 
-            int start = Math.max(i - 2, 0);
+            int start = Math.max(len - 2, 0);
+            String part = num.substring(start, len);
 
-            sb.insert(0, "," + num.substring(start, i));
-
-            i -= 2;
+            sb.insert(0, part + ",");
+            len -= 2;
         }
 
         return toNepaliDigits(sb.toString());
@@ -125,7 +128,7 @@ public class EnglishNepaliConversion {
     /**
      * Internal recursive converter for number-to-word conversion.
      */
-    private String convert(long n) {
+    private static String convert(long n) {
 
         if (n < 100) return UNIT[(int) n];
         if (n < 1_000) return twoPart(n, 100, " सय");
@@ -140,7 +143,7 @@ public class EnglishNepaliConversion {
     /**
      * Helper for splitting number into quotient and remainder.
      */
-    private String twoPart(long n, long scale, String label) {
+    private static String twoPart(long n, long scale, String label) {
 
         long q = n / scale;
         long r = n % scale;
@@ -158,7 +161,7 @@ public class EnglishNepaliConversion {
     /**
      * Converts input number to plain string representation.
      */
-    private String convertToString(Number input) {
+    private static String convertToString(Number input) {
 
         if (input == null) return "0";
 
@@ -172,7 +175,7 @@ public class EnglishNepaliConversion {
     /**
      * Converts ASCII digits in a string into Nepali digits.
      */
-    private String toNepaliDigits(String input) {
+    private static String toNepaliDigits(String input) {
 
         char[] arr = input.toCharArray();
 

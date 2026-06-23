@@ -1,7 +1,6 @@
-package io.github.sandeshkhatiwada05.englishnepaliconversion.AdAndBs.Service;
+package io.github.sandeshkhatiwada05.englishnepaliconversion.adandbs.service;
 
-import io.github.sandeshkhatiwada05.englishnepaliconversion.AdAndBs.config.CalendarDataLoader;
-import io.github.sandeshkhatiwada05.englishnepaliconversion.AdAndBs.model.NepaliDate;
+import io.github.sandeshkhatiwada05.englishnepaliconversion.adandbs.config.CalendarDataLoader;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -25,7 +24,7 @@ import java.util.Map;
  * for all supported years in {@link CalendarDataLoader}.
  * 
  */
-public final class AdAndBsConverter {
+public final class ConvertAdAndBs {
 
     /**
      * Preloaded BS calendar data.
@@ -51,7 +50,7 @@ public final class AdAndBsConverter {
      */
     private static final int BS_REFERENCE_DAY = 264;
 
-    private AdAndBsConverter() {
+    private ConvertAdAndBs() {
         // utility class
     }
 
@@ -213,5 +212,12 @@ public final class AdAndBsConverter {
         if (day < 1 || day > CALENDAR.get(year)[month - 1]) {
             throw new IllegalArgumentException("Invalid day: " + day);
         }
+    }
+
+    private record NepaliDate(
+            int year,
+            int month,
+            int day
+    ) {
     }
 }
